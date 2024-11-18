@@ -61,7 +61,9 @@ def consulta_indicadores():
                 st.write(f"Resultados para el indicador **{indicador.upper()}** en la fecha {fecha}:")
                 if "serie" in resultado and resultado["serie"]:
                     item = resultado["serie"][0]
-                    st.write(f"Valor: {item['valor']} pesos")
+                    #st.write(f"Valor: {item['valor']} pesos")
+                    st.markdown(f"**Valor:** <span style='font-size:24px; font-weight:bold'>{item['valor']} pesos</span>", unsafe_allow_html=True)
+
                 else:
                     st.warning("No se encontraron datos para esta fecha.")
 
@@ -134,7 +136,7 @@ def calculadora_conversion():
                 valor_origen = origen["serie"][0]["valor"]
                 valor_destino = destino["serie"][0]["valor"]
                 conversion = (cantidad * valor_origen) / valor_destino
-                st.write(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.4f} {indicador_destino.upper()} en la fecha {fecha}.")
+                st.write(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
             except (IndexError, KeyError):
                 st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
 
