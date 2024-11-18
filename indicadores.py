@@ -53,7 +53,7 @@ def consulta_indicadores():
             "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
         ])
         fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
-        if st.sidebar.button("Consultar"):
+        if st.button("Consultar"):
             resultado = api.consultar_indicadores_fecha(indicador, fecha)
             if "error" in resultado:
                 st.error(f"Error: {resultado['error']}")
@@ -71,7 +71,7 @@ def consulta_indicadores():
             "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
         ])
         # Agregar clave única al botón
-        if st.sidebar.button("Consultar", key="consultar_indicador_especifico"):
+        if st.button("Consultar", key="consultar_indicador_especifico"):
             resultado = api.consultar_indicadores_fecha(indicador, fecha=None)
             if "error" in resultado:
                 st.error(f"Error: {resultado['error']}")
