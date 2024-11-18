@@ -61,7 +61,7 @@ def consulta_indicadores():
                 st.write(f"Resultados para el indicador **{indicador.upper()}** en la fecha {fecha}:")
                 if "serie" in resultado and resultado["serie"]:
                     item = resultado["serie"][0]
-                    st.write(f"Valor: {item['valor']}")
+                    st.write(f"Valor: {item['valor']} pesos")
                 else:
                     st.warning("No se encontraron datos para esta fecha.")
 
@@ -81,7 +81,7 @@ def consulta_indicadores():
                     for item in resultado["serie"]:
                         # Convertir fecha al formato dd/mm/yy
                         fecha = datetime.strptime(item['fecha'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%d/%m/%y")
-                        st.write(f"Fecha: {fecha}, Valor: {item['valor']}")
+                        st.write(f"Fecha: {fecha}, Valor: {item['valor']} pesos")
                 else:
                     st.warning("No se encontraron datos recientes para este indicador.")
 
@@ -100,7 +100,7 @@ def consulta_indicadores():
                 st.write(f"Resultados para el indicador **{indicador.upper()}**:")
                 if "serie" in resultado:
                     for item in resultado["serie"]:
-                        st.write(f"Fecha: {item['fecha']}, Valor: {item['valor']}")
+                        st.write(f"Fecha: {item['fecha']}, Valor: {item['valor']} pesos")
                 else:
                     st.warning("No se encontraron datos recientes para este indicador.")
 
