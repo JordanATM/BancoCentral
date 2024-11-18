@@ -42,7 +42,7 @@ def main():
 def consulta_indicadores():
     consulta_tipo = st.sidebar.radio(
         "Selecciona el tipo de consulta",
-        ("Indicador por fecha","Indicador específico")
+        ("Indicador por fecha","Indicador específico último mes")
     )
 
     api = Mindicador()
