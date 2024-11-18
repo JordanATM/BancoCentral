@@ -42,24 +42,50 @@ def main():
 def consulta_indicadores():
     consulta_tipo = st.sidebar.radio(
         "Selecciona el tipo de consulta",
-        ("Todos los indicadores", "Indicador específico", "Indicador por fecha")
+        ("Indicador por fecha","Indicador específico","Todos los indicadores")
     )
 
     api = Mindicador()
 
-    if consulta_tipo == "Todos los indicadores":
-        st.write("Consulta de todos los indicadores disponibles.")
+    if consulta_tipo == "Indicador por fecha":
+        indicador = st.selectbox("Selecciona el indicador", [
+            "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
+            "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
+        ])
+        fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
         if st.sidebar.button("Consultar"):
-            resultado = api.consultar_indicadores()
+            resultado = api.consultar_indicadores_fecha(indicador, fecha)
             if "error" in resultado:
                 st.error(f"Error: {resultado['error']}")
             else:
-                st.write("Últimos valores de los indicadores:")
-                for key, indicador in resultado.items():
-                    if isinstance(indicador, dict) and "valor" in indicador:
-                        st.write(f"**{indicador['nombre']}**: {indicador['valor']} {indicador['unidad_medida']}")
-                    elif key == "autor":
-                        st.write(f"Fuente: {indicador}")
+                st.write(f"Resultados para el indicador **{indicador.upper()}** en la fecha {fecha}:")
+                if "serie" in resultado and resultado["serie"]:
+                    item = resultado["serie"][0]
+                    st.write(f"Valor: {item['valor']}")
+                else:
+                    st.warning("No se encontraron datos para esta fecha.")
+
+    elif consulta_tipo == "Indicador específico":
+        indicador = st.selectbox("Selecciona el indicador", [
+            "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
+            "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
+        ])
+        # Agregar clave única al botón
+        if st.sidebar.button("Consultar", key="consultar_indicador_especifico"):
+            resultado = api.consultar_indicadores_fecha(indicador, fecha=None)
+            if "error" in resultado:
+                st.error(f"Error: {resultado['error']}")
+            else:
+                st.write(f"Resultados para el indicador **{indicador.upper()}**:")
+                if "serie" in resultado and resultado["serie"]:
+                    for item in resultado["serie"]:
+                        # Convertir fecha al formato dd/mm/yy
+                        fecha = datetime.strptime(item['fecha'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%d/%m/%y")
+                        st.write(f"Fecha: {fecha}, Valor: {item['valor']}")
+                else:
+                    st.warning("No se encontraron datos recientes para este indicador.")
+
+
 
     elif consulta_tipo == "Indicador específico":
         indicador = st.selectbox("Selecciona el indicador", [
@@ -78,23 +104,7 @@ def consulta_indicadores():
                 else:
                     st.warning("No se encontraron datos recientes para este indicador.")
 
-    elif consulta_tipo == "Indicador por fecha":
-        indicador = st.selectbox("Selecciona el indicador", [
-            "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
-            "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
-        ])
-        fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
-        if st.sidebar.button("Consultar"):
-            resultado = api.consultar_indicadores_fecha(indicador, fecha)
-            if "error" in resultado:
-                st.error(f"Error: {resultado['error']}")
-            else:
-                st.write(f"Resultados para el indicador **{indicador.upper()}** en la fecha {fecha}:")
-                if "serie" in resultado and resultado["serie"]:
-                    item = resultado["serie"][0]
-                    st.write(f"Valor: {item['valor']}")
-                else:
-                    st.warning("No se encontraron datos para esta fecha.")
+    
 
 def calculadora_conversion():
     st.write("Calculadora de conversión entre indicadores.")
