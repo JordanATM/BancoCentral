@@ -65,7 +65,7 @@ def consulta_indicadores():
                 else:
                     st.warning("No se encontraron datos para esta fecha.")
 
-    elif consulta_tipo == "Indicador específico":
+    elif consulta_tipo == "Indicador específico último mes":
         indicador = st.selectbox("Selecciona el indicador", [
             "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
             "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
