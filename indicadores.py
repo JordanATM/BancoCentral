@@ -51,7 +51,7 @@ def consulta_indicadores():
         indicador = st.selectbox("Selecciona el indicador", [
             "uf", "dolar","utm", "euro"
         ])
-        cantidad = st.number_input("Cantidad a convertir", min_value=0.0, value=1.0)
+        cantidad = st.number_input("Cantidad a convertir", min_value=0, value=1)
         fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
         origen = api.consultar_indicadores_fecha(indicador, fecha)
         if st.button("Consultar"):
