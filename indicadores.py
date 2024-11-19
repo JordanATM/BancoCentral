@@ -52,20 +52,19 @@ def consulta_indicadores():
             "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
             "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
         ])
+        cantidad = st.number_input("Cantidad a convertir", min_value=0.0, value=1.0)
         fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
+        origen = api.consultar_indicadores_fecha(indicador, fecha)
         if st.button("Consultar"):
-            resultado = api.consultar_indicadores_fecha(indicador, fecha)
-            if "error" in resultado:
-                st.error(f"Error: {resultado['error']}")
-            else:
-                st.write(f"Resultados para el indicador **{indicador.upper()}** en la fecha {fecha}:")
-                if "serie" in resultado and resultado["serie"]:
-                    item = resultado["serie"][0]
-                    #st.write(f"Valor: {item['valor']} pesos")
-                    st.markdown(f"**Valor:** <span style='font-size:24px; font-weight:bold'>{item['valor']} pesos</span>", unsafe_allow_html=True)
+            origen = api.consultar_indicadores_fecha(indicador, fecha)
+            valor_origen = origen["serie"][0]["valor"]
+            calculo = cantidad * valor_origen
+            st.write(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
 
-                else:
-                    st.warning("No se encontraron datos para esta fecha.")
+            if "error" in origen:
+                st.error(f"Error: {origen['error']}")
+                st.warning("No se encontraron datos para esta fecha.")
+
 
     elif consulta_tipo == "Indicador específico último mes":
         indicador = st.selectbox("Selecciona el indicador", [
