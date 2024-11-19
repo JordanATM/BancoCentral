@@ -23,7 +23,7 @@ class Mindicador:
         else:
             return {"error": f"No se pudo obtener datos. Código HTTP: {response.status_code}"}
 
-# Función principal
+#Función principal
 def main():
     st.title("Consulta de Indicadores Económicos")
     st.sidebar.title("Opciones")
