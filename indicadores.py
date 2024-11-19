@@ -49,8 +49,7 @@ def consulta_indicadores():
 
     if consulta_tipo == "Indicador por fecha":
         indicador = st.selectbox("Selecciona el indicador", [
-            "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
-            "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
+            "uf", "dolar","utm", "euro"
         ])
         cantidad = st.number_input("Cantidad a convertir", min_value=0.0, value=1.0)
         fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
@@ -113,12 +112,12 @@ def calculadora_conversion():
 
     # Selección de indicadores
     indicador_origen = st.selectbox("Selecciona el indicador de origen", [
-        "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
-        "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
+        "uf", "dolar", "euro", 
+        "utm"
     ])
     indicador_destino = st.selectbox("Selecciona el indicador de destino", [
-        "uf", "ivp", "dolar", "dolar_intercambio", "euro", "ipc", 
-        "utm", "imacec", "tpm", "libra_cobre", "tasa_desempleo", "bitcoin"
+        "uf", "dolar","euro", 
+        "utm"
     ])
     cantidad = st.number_input("Cantidad a convertir", min_value=0.0, value=1.0)
     fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
