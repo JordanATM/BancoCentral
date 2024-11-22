@@ -25,7 +25,7 @@ class Mindicador:
 
 #Función principal
 def main():
-    st.title("Consulta de Indicadores Económicos")
+    st.title("🗓️ Consulta de Indicadores Económicos")
     st.sidebar.title("Opciones")
 
     # Sidebar para elegir funcionalidad
