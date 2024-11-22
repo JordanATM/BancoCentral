@@ -31,7 +31,7 @@ def main():
     # Sidebar para elegir funcionalidad
     opcion = st.sidebar.selectbox(
         "Selecciona una opción",
-        ["Consulta de Indicadores", "Calculadora de Conversión"]
+        ["Calculadora de Conversión", "Consulta de Indicadores"]
     )
 
     if opcion == "Consulta de Indicadores":
