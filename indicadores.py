@@ -68,7 +68,7 @@ def consulta_indicadores():
         if st.button("Consultar", key="consultar_mes"):
             resultado = api.consultar_indicadores_fecha(indicador)
             if "serie" in resultado and resultado["serie"]:
-                st.write(f"Resultados para el indicador **{indicador.upper()}**:")
+                st.success(f"Resultados para el indicador **{indicador.upper()}**:")
                 for item in resultado["serie"]:
                     fecha = datetime.strptime(item['fecha'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%d/%m/%y")
                     st.write(f"Fecha: {fecha}, Valor: {item['valor']} pesos")
