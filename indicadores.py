@@ -59,7 +59,7 @@ def consulta_indicadores():
             if "serie" in origen and len(origen["serie"]) > 0:
                 valor_origen = origen["serie"][0]["valor"]
                 calculo = cantidad * valor_origen
-                st.write(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
+                st.success(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
             else:
                 st.error("No se encontraron datos para esta fecha.")
     
@@ -91,7 +91,7 @@ def calculadora_conversion():
                 valor_origen = origen["serie"][0]["valor"]
                 valor_destino = destino["serie"][0]["valor"]
                 conversion = (cantidad * valor_origen) / valor_destino
-                st.write(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+                st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
             except (IndexError, KeyError):
                 st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
         else:
