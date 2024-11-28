@@ -56,13 +56,18 @@ def consulta_indicadores():
         origen = api.consultar_indicadores_fecha(indicador, fecha)
         if st.button("Consultar"):
             origen = api.consultar_indicadores_fecha(indicador, fecha)
-            valor_origen = origen["serie"][0]["valor"]
-            calculo = cantidad * valor_origen
-            st.write(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
-
-            if "error" in origen:
-                st.error(f"Error: {origen['error']}")
-                st.warning("No se encontraron datos para esta fecha.")
+        
+            # Validar que la respuesta contenga datos válidos
+            if "serie" in origen and len(origen["serie"]) > 0:
+                valor_origen = origen["serie"][0]["valor"]
+                calculo = cantidad * valor_origen
+                st.write(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
+            else:
+                # Manejo de errores en caso de datos no encontrados
+                if "error" in origen:
+                    st.error(f"Error: {origen['error']}")
+                else:
+                    st.error("No se encontraron datos para esta fecha.")
 
 
     elif consulta_tipo == "Indicador específico último mes":
