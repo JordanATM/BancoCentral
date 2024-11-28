@@ -64,7 +64,7 @@ def consulta_indicadores():
                 st.error("No se encontraron datos para esta fecha.")
     
     elif consulta_tipo == "Indicador específico último mes":
-        indicador = st.selectbox("Selecciona el indicador:", ["uf", "ivp", "dolar", "euro", "utm"])
+        indicador = st.selectbox("Selecciona el indicador:", ["uf", "dolar", "euro", "utm"])
         if st.button("Consultar", key="consultar_mes"):
             resultado = api.consultar_indicadores_fecha(indicador)
             if "serie" in resultado and resultado["serie"]:
