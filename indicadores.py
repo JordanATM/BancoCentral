@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-st.set_page_config(page_title= "Indicadores", page_icon=':bar_chart:')
+st.set_page_config(page_title="Indicadores", page_icon=":bar_chart:")
 
 class Mindicador:
     def consultar_indicadores(self):
@@ -25,10 +25,11 @@ class Mindicador:
             return {"error": f"No se pudo obtener datos. Código HTTP: {response.status_code}"}
 
 def main():
-    #Fuente de datos
+    # Fuente de datos
     st.sidebar.text("Fuente:")
-    st.sidebar.link_button('Banco Central de Chile',"https://www.bcentral.cl/inicio")
-    st.sidebar.title("Opciones")    
+    st.sidebar.link_button("Banco Central de Chile","https://www.bcentral.cl/inicio")
+    st.sidebar.title("Opciones")
+
     # Menú lateral
     opcion = st.sidebar.radio(
         "Selecciona una funcionalidad:",
@@ -36,8 +37,7 @@ def main():
     )
     
     st.title("🗓️ Consulta de Indicadores Económicos")
-
-        
+    
     # Mostrar ambas funcionalidades juntas
     if opcion == "Consulta de Indicadores":
         st.header("Consulta de Indicadores")
@@ -55,7 +55,6 @@ def consulta_indicadores():
         key="consulta_tipo"
     )
     
-
     if consulta_tipo == "Indicador por fecha":
         indicador = st.selectbox("Selecciona el indicador:", ["uf", "dolar", "utm", "euro"])
         cantidad = st.number_input("Cantidad a convertir:", min_value=0, value=1)
@@ -65,7 +64,11 @@ def consulta_indicadores():
             if "serie" in origen and len(origen["serie"]) > 0:
                 valor_origen = origen["serie"][0]["valor"]
                 calculo = cantidad * valor_origen
-                st.success(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
+                col1, col2 = st.columns([2, 1])
+                with col1:
+                    st.success(f"{cantidad} {indicador.upper()} equivale a {calculo:.2f} pesos, en la fecha {fecha}.")
+                with col2:
+                    copiar_valor_html(calculo)
             else:
                 st.error("No se encontraron datos para esta fecha.")
     
@@ -77,7 +80,11 @@ def consulta_indicadores():
                 st.success(f"Resultados para el indicador **{indicador.upper()}**:")
                 for item in resultado["serie"]:
                     fecha = datetime.strptime(item['fecha'], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%d/%m/%y")
-                    st.write(f"Fecha: {fecha}, Valor: {item['valor']} pesos")
+                    col1, col2 = st.columns([3, 1])
+                    with col1:
+                        st.write(f"Fecha: {fecha}, Valor: {item['valor']} pesos")
+                    with col2:
+                        copiar_valor_html(item['valor'])
             else:
                 st.warning("No se encontraron datos recientes para este indicador.")
 
@@ -97,11 +104,64 @@ def calculadora_conversion():
                 valor_origen = origen["serie"][0]["valor"]
                 valor_destino = destino["serie"][0]["valor"]
                 conversion = (cantidad * valor_origen) / valor_destino
-                st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+                with col2:
+                    copiar_valor_html(conversion)
+
             except (IndexError, KeyError):
                 st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
         else:
             st.error("No se pudieron obtener los datos para la conversión.")
+
+def copiar_valor_html(valor):
+    """Función para mostrar el bloque de código con funcionalidad de copia al portapapeles."""
+    html_code = f"""
+    <style>
+        .copy-button {{
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }}
+        .copy-button:hover {{
+            background-color: #0056b3;
+        }}
+        .copy-button:active {{
+            background-color: #003f7f;
+        }}
+        .copy-container {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }}
+        .copy-code {{
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 5px;
+            border-radius: 5px;
+        }}
+    </style>
+    <div class="copy-container">
+        <pre id="code-block" class="copy-code">{valor:.2f}</pre>
+        <button class="copy-button" onclick="copyToClipboard()">Copiar</button>
+    </div>
+    <script>
+    function copyToClipboard() {{
+        const codeBlock = document.getElementById('code-block');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {{
+            alert('¡Valor copiado al portapapeles!');
+        }});
+    }}
+    </script>
+    """
+
+    st.components.v1.html(html_code, height=100)
 
 if __name__ == "__main__":
     main()
