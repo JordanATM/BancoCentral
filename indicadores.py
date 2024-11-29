@@ -25,6 +25,7 @@ class Mindicador:
             return {"error": f"No se pudo obtener datos. Código HTTP: {response.status_code}"}
 
 def main():
+    #Fuente de datos
     st.sidebar.text("Fuente:")
     st.sidebar.link_button('Banco Central de Chile',"https://www.bcentral.cl/inicio")
     st.sidebar.title("Opciones")    
