@@ -2,6 +2,8 @@ import streamlit as st
 import requests
 from datetime import datetime
 
+st.set_page_config(page_title= "Indicadores", page_icon=':bar_chart:')
+
 class Mindicador:
     def consultar_indicadores(self):
         url = "https://mindicador.cl/api"
