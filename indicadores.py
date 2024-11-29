@@ -116,7 +116,7 @@ def calculadora_conversion():
             st.error("No se pudieron obtener los datos para la conversión.")
 
 def copiar_valor_html(valor):
-    """Función para mostrar el bloque de código con funcionalidad de copia al portapapeles."""
+    """Función para mostrar el bloque de código con funcionalidad de copia al portapapeles y mensaje temporal."""
     html_code = f"""
     <style>
         .copy-button {{
@@ -146,22 +146,33 @@ def copiar_valor_html(valor):
             padding: 5px;
             border-radius: 5px;
         }}
+        .copy-message {{
+            font-size: 14px;
+            color: green;
+            margin-top: 5px;
+            display: none;
+        }}
     </style>
     <div class="copy-container">
         <pre id="code-block" class="copy-code">{valor:.2f}</pre>
         <button class="copy-button" onclick="copyToClipboard()">Copiar</button>
     </div>
+    <div id="copy-message" style = "text-align: center;" class="copy-message">¡Valor copiado al portapapeles!</div>
     <script>
     function copyToClipboard() {{
         const codeBlock = document.getElementById('code-block');
         navigator.clipboard.writeText(codeBlock.innerText).then(() => {{
-            alert('¡Valor copiado al portapapeles!');
+            const message = document.getElementById('copy-message');
+            message.style.display = 'block';  // Mostrar el mensaje
+            setTimeout(() => {{
+                message.style.display = 'none';  // Ocultar el mensaje después de 2 segundos
+            }}, 2000);
         }});
     }}
     </script>
     """
+    st.components.v1.html(html_code, height=150)
 
-    st.components.v1.html(html_code, height=100)
 
 if __name__ == "__main__":
     main()
