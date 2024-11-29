@@ -25,8 +25,9 @@ class Mindicador:
             return {"error": f"No se pudo obtener datos. Código HTTP: {response.status_code}"}
 
 def main():
-    st.sidebar.title("Opciones")
-    
+    st.sidebar.text("Fuente:")
+    st.sidebar.link_button('Banco Central de Chile',"https://www.bcentral.cl/inicio")
+    st.sidebar.title("Opciones")    
     # Menú lateral
     opcion = st.sidebar.radio(
         "Selecciona una funcionalidad:",
@@ -34,7 +35,8 @@ def main():
     )
     
     st.title("🗓️ Consulta de Indicadores Económicos")
-    
+
+        
     # Mostrar ambas funcionalidades juntas
     if opcion == "Consulta de Indicadores":
         st.header("Consulta de Indicadores")
@@ -51,6 +53,7 @@ def consulta_indicadores():
         ("Indicador por fecha", "Indicador específico último mes"),
         key="consulta_tipo"
     )
+    
 
     if consulta_tipo == "Indicador por fecha":
         indicador = st.selectbox("Selecciona el indicador:", ["uf", "dolar", "utm", "euro"])
