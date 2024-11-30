@@ -104,7 +104,7 @@ def calculadora_conversion():
                 valor_origen = origen["serie"][0]["valor"]
                 valor_destino = destino["serie"][0]["valor"]
                 conversion = (cantidad * valor_origen) / valor_destino
-                col1, col2 = st.columns([3, 1])
+                col1, col2 = st.columns([2, 1])
                 with col1:
                     st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
                 with col2:
@@ -119,15 +119,23 @@ def copiar_valor_html(valor):
     """Función para mostrar el bloque de código con funcionalidad de copia al portapapeles y mensaje temporal."""
     html_code = f"""
     <style>
+        html{{
+           
+            
+        }}
+
         .copy-button {{
             background-color: #007BFF;
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 5px 15px;
             font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-top: -1.1px;
+            margin-bottom: 15px;
+            
         }}
         .copy-button:hover {{
             background-color: #0056b3;
@@ -137,36 +145,45 @@ def copiar_valor_html(valor):
         }}
         .copy-container {{
             display: flex;
-            align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            gap: 5px;
         }}
         .copy-code {{
-            font-family: monospace;
+            font-family: arial;
             background-color: #f8f9fa;
-            padding: 5px;
+            padding: 5px 30px;
             border-radius: 5px;
+            align-items: center;
+            border: solid black;
+            margin-bottom: 12px;
+            margin-top: -1px;
         }}
         .copy-message {{
-            font-size: 14px;
-            color: green;
-            margin-top: 5px;
+            font-family: arial;
+            font-size: 15px;
+            font-weight: bold;
+            background-color: green;
+            color: white;
+            margin-top: -5px;
             display: none;
+            text-align: center;
+            border-radius: 5px;
         }}
     </style>
     <div class="copy-container">
         <pre id="code-block" class="copy-code">{valor:.2f}</pre>
         <button class="copy-button" onclick="copyToClipboard()">Copiar</button>
     </div>
-    <div id="copy-message" style = "text-align: center;" class="copy-message">¡Valor copiado al portapapeles!</div>
+    <div id="copy-message" class="copy-message">Valor copiado</div>
     <script>
     function copyToClipboard() {{
         const codeBlock = document.getElementById('code-block');
         navigator.clipboard.writeText(codeBlock.innerText).then(() => {{
             const message = document.getElementById('copy-message');
-            message.style.display = 'block';  // Mostrar el mensaje
+            message.style.display = 'block';  
             setTimeout(() => {{
-                message.style.display = 'none';  // Ocultar el mensaje después de 2 segundos
-            }}, 2000);
+                message.style.display = 'none'; 
+            }}, 1000);
         }});
     }}
     </script>
