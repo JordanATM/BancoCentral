@@ -93,7 +93,7 @@ def calculadora_conversion():
     api = Mindicador()
     
     # Incluye "peso chileno" como opción
-    indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["Peso", "uf", "dolar", "euro", "utm"])
+    indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["uf", "Peso", "dolar", "euro", "utm"])
     indicador_destino = st.selectbox("Selecciona el indicador de destino:", ["Peso", "uf", "dolar", "euro", "utm"])
     cantidad = st.number_input("Cantidad a convertir:", min_value=0.0, value=1.0)
     fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
