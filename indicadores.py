@@ -88,32 +88,96 @@ def consulta_indicadores():
             else:
                 st.warning("No se encontraron datos recientes para este indicador.")
 
+
 def calculadora_conversion():
     api = Mindicador()
-    indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["uf", "dolar", "euro", "utm"])
-    indicador_destino = st.selectbox("Selecciona el indicador de destino:", ["uf", "dolar", "euro", "utm"])
+    
+    # Incluye "peso chileno" como opción
+    indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["Peso", "uf", "dolar", "euro", "utm"])
+    indicador_destino = st.selectbox("Selecciona el indicador de destino:", ["Peso", "uf", "dolar", "euro", "utm"])
     cantidad = st.number_input("Cantidad a convertir:", min_value=0.0, value=1.0)
     fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
     
     if st.button("Convertir"):
-        origen = api.consultar_indicadores_fecha(indicador_origen, fecha)
-        destino = api.consultar_indicadores_fecha(indicador_destino, fecha)
-
-        if "serie" in origen and "serie" in destino:
-            try:
-                valor_origen = origen["serie"][0]["valor"]
-                valor_destino = destino["serie"][0]["valor"]
-                conversion = (cantidad * valor_origen) / valor_destino
-                col1, col2 = st.columns([2, 1])
-                with col1:
-                    st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
-                with col2:
-                    copiar_valor_html(conversion)
-
-            except (IndexError, KeyError):
-                st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
+        if indicador_origen == "Peso":
+            # Convertir desde pesos chilenos a otra divisa
+            destino = api.consultar_indicadores_fecha(indicador_destino, fecha)
+            if "serie" in destino and destino["serie"]:
+                try:
+                    valor_destino = destino["serie"][0]["valor"]
+                    conversion = cantidad / valor_destino
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.success(f"{cantidad:.2f} pesos chilenos equivalen a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+                    with col2:
+                        copiar_valor_html(conversion)
+                except (IndexError, KeyError):
+                    st.error("No se encontraron valores para el indicador de destino en la fecha seleccionada.")
+            else:
+                st.error("No se pudo obtener el dato para la divisa de destino.")
+        elif indicador_destino == "Peso":
+            # Convertir desde otra divisa a pesos chilenos
+            origen = api.consultar_indicadores_fecha(indicador_origen, fecha)
+            if "serie" in origen and origen["serie"]:
+                try:
+                    valor_origen = origen["serie"][0]["valor"]
+                    conversion = cantidad * valor_origen
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.success(f"{cantidad:.2f} {indicador_origen.upper()} equivalen a {conversion:.2f} pesos chilenos en la fecha {fecha}.")
+                    with col2:
+                        copiar_valor_html(conversion)
+                except (IndexError, KeyError):
+                    st.error("No se encontraron valores para el indicador de origen en la fecha seleccionada.")
+            else:
+                st.error("No se pudo obtener el dato para la divisa de origen.")
         else:
-            st.error("No se pudieron obtener los datos para la conversión.")
+            # Convertir entre otras divisas
+            origen = api.consultar_indicadores_fecha(indicador_origen, fecha)
+            destino = api.consultar_indicadores_fecha(indicador_destino, fecha)
+
+            if "serie" in origen and "serie" in destino:
+                try:
+                    valor_origen = origen["serie"][0]["valor"]
+                    valor_destino = destino["serie"][0]["valor"]
+                    conversion = (cantidad * valor_origen) / valor_destino
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.success(f"{cantidad:.2f} {indicador_origen.upper()} equivalen a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+                    with col2:
+                        copiar_valor_html(conversion)
+                except (IndexError, KeyError):
+                    st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
+            else:
+                st.error("No se pudieron obtener los datos para la conversión.")
+
+
+# def calculadora_conversion():
+#     api = Mindicador()
+#     indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["uf", "dolar", "euro", "utm"])
+#     indicador_destino = st.selectbox("Selecciona el indicador de destino:", ["uf", "dolar", "euro", "utm"])
+#     cantidad = st.number_input("Cantidad a convertir:", min_value=0.0, value=1.0)
+#     fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
+    
+#     if st.button("Convertir"):
+#         origen = api.consultar_indicadores_fecha(indicador_origen, fecha)
+#         destino = api.consultar_indicadores_fecha(indicador_destino, fecha)
+
+#         if "serie" in origen and "serie" in destino:
+#             try:
+#                 valor_origen = origen["serie"][0]["valor"]
+#                 valor_destino = destino["serie"][0]["valor"]
+#                 conversion = (cantidad * valor_origen) / valor_destino
+#                 col1, col2 = st.columns([2, 1])
+#                 with col1:
+#                     st.success(f"{cantidad} {indicador_origen.upper()} equivale a {conversion:.2f} {indicador_destino.upper()} en la fecha {fecha}.")
+#                 with col2:
+#                     copiar_valor_html(conversion)
+
+#             except (IndexError, KeyError):
+#                 st.error("No se encontraron valores para los indicadores en la fecha seleccionada.")
+#         else:
+#             st.error("No se pudieron obtener los datos para la conversión.")
 
 def copiar_valor_html(valor):
     """Función para mostrar el bloque de código con funcionalidad de copia al portapapeles y mensaje temporal."""
