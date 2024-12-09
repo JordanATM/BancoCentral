@@ -95,12 +95,17 @@ def calculadora_conversion():
     # Incluye "peso chileno" como opción
     indicador_origen = st.selectbox("Selecciona el indicador de origen:", ["uf", "Peso", "dolar", "euro", "utm"])
     indicador_destino = st.selectbox("Selecciona el indicador de destino:", ["Peso", "uf", "dolar", "euro", "utm"])
-    cantidad = st.number_input("Cantidad a convertir:", min_value=0.0, value=1.0)
+    if indicador_origen == 'Peso':
+        cantidad = st.number_input("Cantidad a convertir:", min_value=0, value=1)
+    else:
+        cantidad = st.number_input("Cantidad a convertir:", min_value=0.0, value=1.0)
+
     fecha = st.date_input("Selecciona una fecha").strftime("%d-%m-%Y")
     
     if st.button("Convertir"):
         if indicador_origen == "Peso":
             # Convertir desde pesos chilenos a otra divisa
+            
             destino = api.consultar_indicadores_fecha(indicador_destino, fecha)
             if "serie" in destino and destino["serie"]:
                 try:
@@ -108,7 +113,7 @@ def calculadora_conversion():
                     conversion = cantidad / valor_destino
                     col1, col2 = st.columns([2, 1])
                     with col1:
-                        st.success(f"{cantidad:.2f} pesos chilenos equivalen a {conversion:.5f} {indicador_destino.upper()} en la fecha {fecha}.")
+                        st.success(f"{cantidad} pesos chilenos equivalen a {conversion:.5f} {indicador_destino.upper()} en la fecha {fecha}.")
                     with col2:
                         copiar_valor_html(conversion)
                 except (IndexError, KeyError):
