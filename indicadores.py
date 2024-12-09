@@ -108,7 +108,7 @@ def calculadora_conversion():
                     conversion = cantidad / valor_destino
                     col1, col2 = st.columns([2, 1])
                     with col1:
-                        st.success(f"{cantidad:.5f} pesos chilenos equivalen a {conversion:.5f} {indicador_destino.upper()} en la fecha {fecha}.")
+                        st.success(f"{cantidad:.2f} pesos chilenos equivalen a {conversion:.5f} {indicador_destino.upper()} en la fecha {fecha}.")
                     with col2:
                         copiar_valor_html(conversion)
                 except (IndexError, KeyError):
