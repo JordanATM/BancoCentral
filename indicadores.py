@@ -7,7 +7,7 @@ st.set_page_config(page_title="Indicadores", page_icon=":bar_chart:")
 class Mindicador:
     def consultar_indicadores(self):
         url = "https://mindicador.cl/api"
-        response = requests.get(url)
+        response = requests.get(url, verify = False)
         if response.status_code == 200:
             return response.json()
         else:
